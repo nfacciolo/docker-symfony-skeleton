@@ -15,3 +15,13 @@
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
+
+
+bin
+config
+migrations
+public
+src
+.env*
+composer.*
+symfony.lock
