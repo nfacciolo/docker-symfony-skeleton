@@ -61,7 +61,7 @@ services:
         environment:
             - POSTGRESQL_USERNAME=${DATABASE_USERNAME}
             - POSTGRESQL_PASSWORD=${DATABASE_PASSWORD}
-            - POSTGRESQL_DATABASE=${SYLIUS_DATABASE_NAME}
+            - POSTGRESQL_DATABASE=${DATABASE_NAME}
         volumes:
             - pg_data:/bitnami/postgresql
 
