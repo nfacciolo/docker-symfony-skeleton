@@ -7,12 +7,11 @@
  *
  * @example cp .castor/config.php.dist .castor/config.php
  */
-
 return [
     'PROJECT_NAME' => 'my-project',
-    'APP_USER' => 'symfony',
-    'DATABASE_USERNAME' => 'root',
+    'APP_USER' => 'reactic',
+    'DATABASE_USERNAME' => 'secret',
     'DATABASE_PASSWORD' => 'secret',
-    'DATABASE_NAME' => 'sylius_db',
+    'DATABASE_NAME' => 'secret',
     'ENV' => 'dev',
 ];
