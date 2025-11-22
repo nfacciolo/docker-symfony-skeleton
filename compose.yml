@@ -8,9 +8,10 @@ services:
         environment:
             STACK_NAME: ${PROJECT_NAME}
             WP_DEBUG: 0
+            APP_USER: ${APP_USER:-symfony}
         volumes:
-            - ./public:/srv/app/public:ro
-            - ./public/media:/srv/app/public/media:ro
+            - ./public:/home/${APP_USER:-symfony}/app/public:ro
+#            - ./public/media:/home/${APP_USER:-symfony}/app/public/media:ro
             - ./docker/nginx/templates/default.conf.template:/etc/nginx/templates/default.conf.template
             - ./docker/nginx/.htpasswd:/etc/nginx/.htpasswd
         #            - php_socket:/var/run/php
@@ -27,9 +28,10 @@ services:
             target: app_php_dev
             args:
                 SYMFONY_VERSION: ${SYMFONY_VERSION:-7.2.*}
+                APP_USER: ${APP_USER:-symfony}
         #        restart: unless-stopped
         volumes:
-            - ./:/srv/app/
+            - ./:/home/${APP_USER:-symfony}/app/
         #   - ./docker/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
 
         #        healthcheck:

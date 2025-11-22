@@ -18,6 +18,7 @@ function reinit(): void
         'config',
         'migrations',
         'public',
+        'tmp',
         'src',
         'var',
         'vendor',

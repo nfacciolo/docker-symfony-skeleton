@@ -38,6 +38,11 @@ function ensureConfiguration(): array
         $defaults['PROJECT_NAME'] ?? 'my-project'
     );
 
+    $config['APP_USER'] = io()->ask(
+        'Nom de l\'utilisateur système dans le container (APP_USER)',
+        $defaults['APP_USER'] ?? 'symfony'
+    );
+
     $config['DATABASE_USERNAME'] = io()->ask(
         'Nom d\'utilisateur de la base de données',
         $defaults['DATABASE_USERNAME'] ?? 'root'

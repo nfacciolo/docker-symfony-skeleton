@@ -11,7 +11,7 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'bin/console' ]; then
   if [ ! -f composer.json ]; then
     composer create-project symfony/skeleton:"7.3.x" ./tmp  --prefer-dist --no-progress --no-interaction
     cd tmp
-    cp -Rp . ..
+    cp -R . ..
     cd -
     rm -Rf tmp/
   fi
