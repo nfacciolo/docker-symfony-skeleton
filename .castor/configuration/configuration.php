@@ -52,14 +52,9 @@ function ensureConfiguration(): array
         'Mot de passe de la base de données'
     ) ?: ($defaults['DATABASE_PASSWORD'] ?? 'secret');
 
-    $config['SYLIUS_DATABASE_NAME'] = io()->ask(
+    $config['DATABASE_NAME'] = io()->ask(
         'Nom de la base de données Sylius',
-        $defaults['SYLIUS_DATABASE_NAME'] ?? 'sylius_db'
-    );
-
-    $config['COOP_DATABASE_NAME'] = io()->ask(
-        'Nom de la base de données Coop',
-        $defaults['COOP_DATABASE_NAME'] ?? 'coop_db'
+        $defaults['DATABASE_NAME'] ?? 'sylius_db'
     );
 
     $config['ENV'] = io()->choice(

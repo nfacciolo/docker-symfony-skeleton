@@ -22,8 +22,7 @@ function getContext(): Context
         'APP_USER' => $config['APP_USER'] ?? 'symfony',
         'DATABASE_USERNAME' => $config['DATABASE_USERNAME'] ?? '',
         'DATABASE_PASSWORD' => $config['DATABASE_PASSWORD'] ?? '',
-        'SYLIUS_DATABASE_NAME' => $config['SYLIUS_DATABASE_NAME'] ?? '',
-        'COOP_DATABASE_NAME' => $config['COOP_DATABASE_NAME'] ?? '',
+        'DATABASE_NAME' => $config['DATABASE_NAME'] ?? '',
         'ENV' => $config['ENV'] ?? 'dev',
     ]);
 }

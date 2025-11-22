@@ -1,9 +1,10 @@
 services:
     proxy:
         container_name: ${PROJECT_NAME}_proxy
-        image: nginx:stable-alpine
+        image: nginxinc/nginx-unprivileged:stable-alpine
         depends_on:
-            - app
+            app:
+                condition: service_healthy
         #            - node
         environment:
             STACK_NAME: ${PROJECT_NAME}
@@ -19,7 +20,7 @@ services:
             - https
             - app
         ports:
-            - "121:80"
+            - "121:8080"
 
     app:
         container_name: ${PROJECT_NAME}_app
@@ -34,11 +35,12 @@ services:
             - ./:/home/${APP_USER:-symfony}/app/
         #   - ./docker/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
 
-        #        healthcheck:
-        #            interval: 10s
-        #            timeout: 3s
-        #            retries: 3
-        #            start_period: 30s
+        healthcheck:
+            test: ["CMD", "test", "-f", "/home/${APP_USER:-symfony}/app/public/index.php"]
+            interval: 5s
+            timeout: 3s
+            retries: 20
+            start_period: 60s
         environment:
             # Run "composer require symfony/orm-pack" to install and configure Doctrine ORM
             DATABASE_URL: pgsql://${DATABASE_USERNAME}:${DATABASE_PASSWORD}@${PROJECT_NAME}_database:5432/${DATABASE_NAME}?serverVersion=16&charset=utf8

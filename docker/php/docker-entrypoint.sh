@@ -21,8 +21,9 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'bin/console' ]; then
 	    composer require symfony/orm-pack
 	fi
 
-	until bin/console doctrine:query:sql "select 1" >/dev/null 2>&1; do
-	    (>&2 echo "Waiting for Database to be ready...")
+	# Verify database is accessible
+	until bin/console dbal:run-sql "SELECT 1" >/dev/null 2>&1; do
+	    (>&2 echo "Verifying database connection...")
 		sleep 1
 	done
 

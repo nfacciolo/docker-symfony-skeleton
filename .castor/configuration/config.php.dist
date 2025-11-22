@@ -13,7 +13,6 @@ return [
     'APP_USER' => 'symfony',
     'DATABASE_USERNAME' => 'root',
     'DATABASE_PASSWORD' => 'secret',
-    'SYLIUS_DATABASE_NAME' => 'sylius_db',
-    'COOP_DATABASE_NAME' => 'coop_db',
+    'DATABASE_NAME' => 'sylius_db',
     'ENV' => 'dev',
 ];

@@ -23,3 +23,9 @@ function build(): void
 {
     run('docker compose build');
 }
+
+#[AsTask]
+function down(): void
+{
+    run('docker compose down');
+}
