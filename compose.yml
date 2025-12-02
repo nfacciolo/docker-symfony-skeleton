@@ -11,8 +11,8 @@ services:
             WP_DEBUG: 0
             APP_USER: ${APP_USER:-symfony}
         volumes:
-            - ./public:/home/${APP_USER:-symfony}/app/public:ro
-#            - ./public/media:/home/${APP_USER:-symfony}/app/public/media:ro
+            - ./public:/srv/app/public:ro
+#            - ./public/media:/srv/app/public/media:ro
             - ./docker/nginx/templates/default.conf.template:/etc/nginx/templates/default.conf.template
             - ./docker/nginx/.htpasswd:/etc/nginx/.htpasswd
         #            - php_socket:/var/run/php
@@ -20,7 +20,7 @@ services:
             - https
             - app
         ports:
-            - "121:8080"
+            - "800:8080"
 
     app:
         container_name: ${PROJECT_NAME}_app
@@ -32,11 +32,11 @@ services:
                 APP_USER: ${APP_USER:-symfony}
         #        restart: unless-stopped
         volumes:
-            - ./:/home/${APP_USER:-symfony}/app/
+            - ./:/srv/app/
         #   - ./docker/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
 
         healthcheck:
-            test: ["CMD", "test", "-f", "/home/${APP_USER:-symfony}/app/public/index.php"]
+            test: ["CMD", "test", "-f", "/srv/app/public/index.php"]
             interval: 5s
             timeout: 3s
             retries: 20
@@ -59,27 +59,27 @@ services:
 
     ###> doctrine/doctrine-bundle ###
 
-    database:
-        image: bitnami/postgresql:16
-        container_name: ${PROJECT_NAME}_database
-        environment:
-            - POSTGRESQL_USERNAME=${DATABASE_USERNAME}
-            - POSTGRESQL_PASSWORD=${DATABASE_PASSWORD}
-            - POSTGRESQL_DATABASE=${DATABASE_NAME}
-        volumes:
-            - pg_data:/bitnami/postgresql
-
-        healthcheck:
-            test: [ "CMD", "pg_isready", "-d", "${POSTGRES_DB:-secret}", "-U", "${POSTGRES_USER:-secret}" ]
-            timeout: 5s
-            retries: 5
-            start_period: 60s
-        ports:
-            - "5432:5432"
-
-        networks:
-            - app
-            - adminer
+#    database:
+#        image: bitnami/postgresql:16
+#        container_name: ${PROJECT_NAME}_database
+#        environment:
+#            - POSTGRESQL_USERNAME=${DATABASE_USERNAME}
+#            - POSTGRESQL_PASSWORD=${DATABASE_PASSWORD}
+#            - POSTGRESQL_DATABASE=${DATABASE_NAME}
+#        volumes:
+#            - pg_data:/bitnami/postgresql
+#
+#        healthcheck:
+#            test: [ "CMD", "pg_isready", "-d", "${POSTGRES_DB:-secret}", "-U", "${POSTGRES_USER:-secret}" ]
+#            timeout: 5s
+#            retries: 5
+#            start_period: 60s
+#        ports:
+#            - "5432:5432"
+#
+#        networks:
+#            - app
+#            - adminer
         # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
 
 

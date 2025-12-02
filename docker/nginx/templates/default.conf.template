@@ -1,5 +1,5 @@
 server {
-    root /home/${APP_USER}/app/public;
+    root /srv/app/public;
     listen *:8080;
 
 	auth_basic_user_file /etc/nginx/.htpasswd;
