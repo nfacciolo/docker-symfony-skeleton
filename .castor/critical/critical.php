@@ -34,6 +34,8 @@ function reinit(): void
         run(sprintf('rm -rf %s', $item));
     }
 
+    run('cp .castor/critical/resources/.gitignore.original .gitignore');
+
     io()->success('Template reinitialized successfully!');
 }
 

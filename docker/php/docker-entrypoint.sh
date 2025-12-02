@@ -9,11 +9,16 @@ fi
 if [ "$1" = 'php-fpm' ] || [ "$1" = 'bin/console' ]; then
 
   if [ ! -f composer.json ]; then
-    composer create-project symfony/skeleton:"7.3.x" ./tmp  --prefer-dist --no-progress --no-interaction
+    composer create-project symfony/skeleton:"8.0.x" ./tmp  --prefer-dist --no-progress --no-interaction
     cd tmp
     cp -R . ..
     cd -
     rm -Rf tmp/
+
+    # Restore original .gitignore
+    if [ -f .gitignore.dist ]; then
+      cp .gitignore.dist .gitignore
+    fi
   fi
 
 	# Install symfony/orm-pack if not already installed
