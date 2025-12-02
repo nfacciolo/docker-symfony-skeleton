@@ -15,6 +15,7 @@ function ensureConfiguration(): array
 {
     $configFile = __DIR__ . '/config.php';
     $configDistFile = __DIR__ . '/config.php.dist';
+    $configDatabaseDistFile = __DIR__ . '/config_database.php.dist';
 
     // If config file exists, load and return it
     if (file_exists($configFile)) {
@@ -32,6 +33,7 @@ function ensureConfiguration(): array
 
     // Ask for each configuration value
     $config = [];
+    $configDatabase = [];
 
     $config['PROJECT_NAME'] = io()->ask(
         'Nom du projet',
@@ -43,19 +45,27 @@ function ensureConfiguration(): array
         $defaults['APP_USER'] ?? 'symfony'
     );
 
-    $config['DATABASE_USERNAME'] = io()->ask(
-        'Nom d\'utilisateur de la base de données',
-        $defaults['DATABASE_USERNAME'] ?? 'root'
+    $config['CREATE_DATABASE'] = (bool) io()->ask(
+        'Créer une base de donnée ?',
+        $defaults['CREATE_DATABASE'] ?? 'false'
     );
+    if($config['CREATE_DATABASE']) {
+        $configDatabase['DATABASE_USERNAME'] = io()->ask(
+            'Nom d\'utilisateur de la base de données',
+            $defaults['DATABASE_USERNAME'] ?? 'root'
+        );
 
-    $config['DATABASE_PASSWORD'] = io()->askHidden(
-        'Mot de passe de la base de données'
-    ) ?: ($defaults['DATABASE_PASSWORD'] ?? 'secret');
+        $configDatabase['DATABASE_PASSWORD'] = io()->askHidden(
+            'Mot de passe de la base de données'
+        ) ?: ($defaults['DATABASE_PASSWORD'] ?? 'secret');
 
-    $config['DATABASE_NAME'] = io()->ask(
-        'Nom de la base de données Sylius',
-        $defaults['DATABASE_NAME'] ?? 'sylius_db'
-    );
+        $configDatabase['DATABASE_NAME'] = io()->ask(
+            'Nom de la base de données Sylius',
+            $defaults['DATABASE_NAME'] ?? 'sylius_db'
+        );
+        $configDbContent = "<?php\n\nreturn " . var_export($configDatabase, true) . ";\n";
+        file_put_contents($configFile, $configDbContent);
+    }
 
     $config['ENV'] = io()->choice(
         'Environnement',

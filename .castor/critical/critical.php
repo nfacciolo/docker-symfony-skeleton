@@ -8,7 +8,7 @@ use function Castor\io;
 use function Castor\run;
 use function configuration\ensureConfiguration;
 
-#[AsTask(description: 'Reinitialize the Symfony template by removing project files')]
+#[AsTask(name:'reinit', description: 'Reinitialize the Symfony template by removing project files')]
 function reinit(): void
 {
     io()->title('Reinitializing Symfony template...');
@@ -27,6 +27,7 @@ function reinit(): void
         'compose.override.yaml',
         'symfony.lock',
         '.castor/configuration/config.php',
+        '.castor/configuration/config_database.php',
     ];
 
     foreach ($itemsToRemove as $item) {

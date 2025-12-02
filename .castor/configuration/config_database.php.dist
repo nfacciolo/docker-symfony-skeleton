@@ -8,8 +8,7 @@
  * @example cp .castor/config.php.dist .castor/config.php
  */
 return [
-    'PROJECT_NAME' => 'my-project',
-    'APP_USER' => 'reactic',
-    'CREATE_DATABASE' => false ,
-    'ENV' => 'dev',
+    'DATABASE_USERNAME' => 'secret',
+    'DATABASE_PASSWORD' => 'secret',
+    'DATABASE_NAME' => 'secret',
 ];
