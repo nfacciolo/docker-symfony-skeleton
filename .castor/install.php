@@ -14,8 +14,22 @@ function database(): void
     io()->success('Packages base de données installés.');
 }
 
+#[AsTask(name: 'database', namespace: 'remove', description: 'Remove Doctrine ORM and database packages')]
+function removeDatabase(): void
+{
+    io()->title('Suppression des packages base de données...');
+    run('docker compose exec app composer remove symfony/orm-pack');
+    io()->success('Packages base de données supprimés.');
+}
+
 #[AsTask(description: 'Install a composer package')]
 function package(string $name): void
 {
     run(sprintf('docker compose exec app composer require %s', escapeshellarg($name)));
+}
+
+#[AsTask(name: 'package', namespace: 'remove', description: 'Remove a composer package')]
+function removePackage(string $name): void
+{
+    run(sprintf('docker compose exec app composer remove %s', escapeshellarg($name)));
 }
