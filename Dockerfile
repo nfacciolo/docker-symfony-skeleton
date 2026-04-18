@@ -2,8 +2,8 @@
 # https://docs.docker.com/compose/compose-file/#target
 
 ARG PHP_VERSION=8.5
-ARG ALPINE_VERSION=3.22
-ARG COMPOSER_VERSION=2.8
+ARG ALPINE_VERSION=3.23
+ARG COMPOSER_VERSION=2.9
 ARG PHP_EXTENSION_INSTALLER_VERSION=latest
 
 FROM composer:${COMPOSER_VERSION} AS composer
@@ -77,7 +77,7 @@ RUN set -eux; \
     bin/console cache:warmup; \
     sync
 
-VOLUME /srv/app/var
+#VOLUME /srv/app/var
 
 COPY docker/php/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
 RUN chmod +x /usr/local/bin/docker-entrypoint
@@ -100,7 +100,9 @@ RUN apk add --update linux-headers bash \
 RUN wget https://get.symfony.com/cli/installer -O - | bash \
     && mv /root/.symfony5/bin/symfony /usr/local/bin/symfony
 
-VOLUME /srv/app/var
+RUN mkdir -p var/cache var/log && chown -R symfony:symfony var
+
+#VOLUME /srv/app/var
 VOLUME /srv/app/public/media
 
 COPY docker/php/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
