@@ -26,7 +26,6 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'bin/console' ]; then
       cp .gitignore.dist .gitignore
     fi
 
-    chown -R symfony:symfony /srv/app
   fi
 
 	bin/console cache:clear

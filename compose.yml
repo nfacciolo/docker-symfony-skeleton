@@ -19,6 +19,7 @@ services:
 
     app:
         container_name: ${PROJECT_NAME}_app
+        user: symfony
         build:
             context: .
             target: app_php_dev
