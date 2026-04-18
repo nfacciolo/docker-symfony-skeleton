@@ -8,26 +8,36 @@ use function Castor\io;
 import(__DIR__ . '/.castor');
 
 
+function hasDatabase(): bool
+{
+    return file_exists(__DIR__ . '/config/packages/doctrine.yaml');
+}
+
+function composeArgs(): string
+{
+    return hasDatabase() ? '--profile db' : '';
+}
+
 #[AsTask]
 function up(): void
 {
     run('mkdir -p public/media');
 
     io()->writeln('Building images...');
-    run('docker compose build');
+    run(sprintf('docker compose %s build', composeArgs()));
 
     io()->writeln('Starting containers...');
-    run('docker compose up');
+    run(sprintf('docker compose %s up', composeArgs()));
 }
 
 #[AsTask]
 function build(): void
 {
-    run('docker compose build');
+    run(sprintf('docker compose %s build', composeArgs()));
 }
 
 #[AsTask]
 function down(): void
 {
-    run('docker compose down');
+    run(sprintf('docker compose %s down', composeArgs()));
 }
