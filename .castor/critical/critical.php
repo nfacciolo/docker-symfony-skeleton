@@ -14,6 +14,8 @@ function reinit(): void
 {
     io()->title('Reinitializing Symfony template...');
 
+    run('docker compose down -v');
+
     $itemsToRemove = [
         'bin',
         'config',
