@@ -51,6 +51,45 @@ function recommended(): void
         '<info>symfony/validator</info> — validation',
     ]);
 
+    io()->section('Symfony UX — Composants UI (install:package <nom>)');
+    io()->listing([
+        '<info>symfony/ux-twig-component</info> — composants PHP/Twig réutilisables',
+        '<info>symfony/ux-live-component</info> — composants réactifs sans JS (dépend de twig-component)',
+        '<info>symfony/ux-icons</info> — icônes SVG dans Twig',
+    ]);
+
+    io()->section('Symfony UX — Interactivité (install:package <nom>)');
+    io()->listing([
+        '<info>symfony/ux-turbo</info> — navigation SPA-like sans framework JS',
+        '<info>symfony/stimulus-bundle</info> — contrôleurs Stimulus (base de tout UX)',
+    ]);
+
+    io()->section('Symfony UX — Formulaires (install:package <nom>)');
+    io()->listing([
+        '<info>symfony/ux-autocomplete</info> — select avec recherche Ajax',
+        '<info>symfony/ux-cropperjs</info> — recadrage d\'images',
+        '<info>symfony/ux-dropzone</info> — zone de dépôt pour uploads',
+    ]);
+
+    io()->section('Symfony UX — Data / Carte (install:package <nom>)');
+    io()->listing([
+        '<info>symfony/ux-chartjs</info> — graphiques Chart.js',
+        '<info>symfony/ux-map</info> — cartes Leaflet / Google Maps',
+    ]);
+
+    io()->section('Symfony UX — Intégrations JS (install:package <nom>)');
+    io()->listing([
+        '<info>symfony/ux-react</info> — composants React',
+        '<info>symfony/ux-vue</info> — composants Vue.js',
+    ]);
+
+    io()->section('Symfony UX — Divers (install:package <nom>)');
+    io()->listing([
+        '<info>symfony/ux-notify</info> — notifications navigateur via Mercure',
+        '<info>symfony/ux-translator</info> — traductions Symfony en JS',
+        '<info>symfony/ux-toolkit</info> — composants et templates réutilisables',
+    ]);
+
     io()->section('Au cas par cas (install:package <nom>)');
     io()->listing([
         '<info>doctrine/doctrine-fixtures-bundle</info> — données de test',
