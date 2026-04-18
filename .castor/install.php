@@ -27,6 +27,42 @@ function removeDatabase(): void
     io()->success('Packages base de données supprimés.');
 }
 
+#[AsTask(description: 'List recommended packages to install')]
+function recommended(): void
+{
+    io()->title('Packages recommandés');
+
+    io()->section('Dev (install:dev)');
+    io()->listing([
+        '<info>symfony/maker-bundle</info> — génération d\'entités, contrôleurs, formulaires...',
+        '<info>symfony/profiler-pack</info> — barre de debug + profiler (inclut var-dumper, monolog)',
+    ]);
+
+    io()->section('Base de données (install:database)');
+    io()->listing([
+        '<info>symfony/orm-pack</info> — Doctrine ORM, migrations',
+    ]);
+
+    io()->section('Stack web (install:web)');
+    io()->listing([
+        '<info>symfony/twig-pack</info> — templating (inutile si API pure)',
+        '<info>symfony/security-bundle</info> — authentification/autorisation',
+        '<info>symfony/form</info> — formulaires',
+        '<info>symfony/validator</info> — validation',
+    ]);
+
+    io()->section('Au cas par cas (install:package <nom>)');
+    io()->listing([
+        '<info>doctrine/doctrine-fixtures-bundle</info> — données de test',
+        '<info>symfony/serializer-pack</info> — sérialisation JSON (essentiel pour API)',
+        '<info>symfony/translation</info> — i18n',
+        '<info>symfony/http-client</info> — appels HTTP sortants',
+        '<info>symfony/mailer</info> — envoi d\'emails',
+        '<info>symfony/asset-mapper</info> — assets frontend (moderne)',
+        '<info>symfony/webpack-encore-bundle</info> — assets frontend (webpack)',
+    ]);
+}
+
 #[AsTask(description: 'Install dev tools (maker-bundle, profiler-pack)')]
 function dev(): void
 {
