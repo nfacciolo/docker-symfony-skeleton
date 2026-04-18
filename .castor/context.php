@@ -21,11 +21,6 @@ function getContext(): Context
 
     return new Context(environment: [
         'PROJECT_NAME' => $config['PROJECT_NAME'] ?? '',
-        'APP_USER' => $config['APP_USER'] ?? 'symfony',
-        'DATABASE_USERNAME' => $config['DATABASE_USERNAME'] ?? '',
-        'DATABASE_PASSWORD' => $config['DATABASE_PASSWORD'] ?? '',
-        'DATABASE_NAME' => $config['DATABASE_NAME'] ?? '',
-        'ENV' => $config['ENV'] ?? 'dev',
     ]);
 }
 

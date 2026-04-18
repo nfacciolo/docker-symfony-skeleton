@@ -4,12 +4,11 @@ namespace configuration;
 
 use function Castor\io;
 
-const CONFIG_KEYS = ['PROJECT_NAME', 'APP_USER', 'CREATE_DATABASE', 'ENV'];
-const DB_CONFIG_KEYS = ['DATABASE_USERNAME', 'DATABASE_PASSWORD', 'DATABASE_NAME'];
+const CONFIG_KEYS = ['PROJECT_NAME'];
 
 function getEnvFilePath(): string
 {
-    return dirname(__DIR__, 2) . '/.env.castor';
+    return dirname(__DIR__, 2) . '/.env';
 }
 
 function parseEnvFile(string $path): array
@@ -86,7 +85,7 @@ function hasConfiguration(): bool
 
 function clearConfiguration(): void
 {
-    removeEnvVariables(getEnvFilePath(), array_merge(CONFIG_KEYS, DB_CONFIG_KEYS));
+    removeEnvVariables(getEnvFilePath(), CONFIG_KEYS);
 }
 
 function ensureConfiguration(): array
@@ -94,61 +93,21 @@ function ensureConfiguration(): array
     $envFile = getEnvFilePath();
     $current = parseEnvFile($envFile);
 
-    $missingMain = array_filter(CONFIG_KEYS, fn($key) => !array_key_exists($key, $current));
-    $createDb = ($current['CREATE_DATABASE'] ?? 'false') === 'true';
-    $missingDb = $createDb
-        ? array_filter(DB_CONFIG_KEYS, fn($key) => !array_key_exists($key, $current))
-        : [];
-
-    if (empty($missingMain) && empty($missingDb)) {
+    if (array_key_exists('PROJECT_NAME', $current)) {
         return $current;
     }
 
     io()->title('Configuration du projet');
     io()->writeln('Des variables de configuration sont manquantes dans .env.');
-    io()->writeln('Veuillez répondre aux questions suivantes pour configurer votre projet.');
     io()->newLine();
 
-    $newVars = [];
+    $newVars = [
+        'PROJECT_NAME' => io()->ask('Nom du projet', 'my-project'),
+    ];
 
-    if (!array_key_exists('PROJECT_NAME', $current)) {
-        $newVars['PROJECT_NAME'] = io()->ask('Nom du projet', 'my-project');
-    }
-
-    if (!array_key_exists('APP_USER', $current)) {
-        $newVars['APP_USER'] = io()->ask("Nom de l'utilisateur système dans le container (APP_USER)", 'symfony');
-    }
-
-    if (!array_key_exists('CREATE_DATABASE', $current)) {
-        $confirmed = io()->confirm('Créer une base de données ?', false);
-        $newVars['CREATE_DATABASE'] = $confirmed ? 'true' : 'false';
-        $current['CREATE_DATABASE'] = $newVars['CREATE_DATABASE'];
-        $createDb = $confirmed;
-    }
-
-    if (!array_key_exists('ENV', $current)) {
-        $newVars['ENV'] = io()->choice('Environnement', ['dev', 'prod', 'test'], 'dev');
-    }
-
-    if ($createDb) {
-        if (!array_key_exists('DATABASE_USERNAME', $current)) {
-            $newVars['DATABASE_USERNAME'] = io()->ask("Nom d'utilisateur de la base de données", 'root');
-        }
-
-        if (!array_key_exists('DATABASE_PASSWORD', $current)) {
-            $newVars['DATABASE_PASSWORD'] = io()->askHidden('Mot de passe de la base de données') ?: 'secret';
-        }
-
-        if (!array_key_exists('DATABASE_NAME', $current)) {
-            $newVars['DATABASE_NAME'] = io()->ask('Nom de la base de données', 'symfony_db');
-        }
-    }
-
-    if (!empty($newVars)) {
-        appendEnvVariables($envFile, $newVars);
-        io()->newLine();
-        io()->success('Configuration sauvegardée dans .env');
-    }
+    appendEnvVariables($envFile, $newVars);
+    io()->newLine();
+    io()->success('Configuration sauvegardée dans .env');
 
     return array_merge($current, $newVars);
 }
