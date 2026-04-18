@@ -11,6 +11,8 @@ import(__DIR__ . '/.castor');
 #[AsTask]
 function up(): void
 {
+    run('mkdir -p public/media');
+
     io()->writeln('Building images...');
     run('docker compose build');
 

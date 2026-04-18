@@ -1,7 +1,7 @@
 services:
     proxy:
         container_name: ${PROJECT_NAME}_proxy
-        image: nginx:stable-alpine
+        image: nginxinc/nginx-unprivileged:stable-alpine
         depends_on:
             - app
         environment:
@@ -9,14 +9,13 @@ services:
             WP_DEBUG: 0
         volumes:
             - ./public:/srv/app/public:ro
-            - ./public/media:/srv/app/public/media:ro
             - ./docker/nginx/templates/default.conf.template:/etc/nginx/templates/default.conf.template
             - ./docker/nginx/.htpasswd:/etc/nginx/.htpasswd
         networks:
             - https
             - app
         ports:
-            - "800:80"
+            - "800:8080"
 
     app:
         container_name: ${PROJECT_NAME}_app
@@ -29,11 +28,10 @@ services:
                 condition: service_healthy
         volumes:
             - ./:/srv/app/
-            - ./public/media:/srv/app/public/media
-            - /srv/app/var/sessions
+
         environment:
             MAILER_DSN: smtp://mailhog:1025
-            SYLIUS_DATABASE_URL: postgresql://${DATABASE_USERNAME}:${DATABASE_PASSWORD}@database/${DATABASE_NAME}?serverVersion=17&charset=utf8
+            SYLIUS_DATABASE_URL: postgresql://${DATABASE_USERNAME:-app}:${DATABASE_PASSWORD:-secret}@database/${DATABASE_NAME:-app}?serverVersion=17&charset=utf8
             XDEBUG_MODE: 'debug'
             XDEBUG_CONFIG: 'mode=debug client_host=host.docker.internal idekey=phpstorm-xdebug start_with_request=trigger remote_handler=dbgp client_port=9003'
         extra_hosts:
@@ -46,14 +44,14 @@ services:
         image: postgres:17
         container_name: ${PROJECT_NAME}_database
         environment:
-            - POSTGRES_USER=${DATABASE_USERNAME}
-            - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
-            - POSTGRES_DB=${DATABASE_NAME}
+            - POSTGRES_USER=${DATABASE_USERNAME:-app}
+            - POSTGRES_PASSWORD=${DATABASE_PASSWORD:-secret}
+            - POSTGRES_DB=${DATABASE_NAME:-app}
         volumes:
             - pg_data:/bitnami/postgresql
 
         healthcheck:
-            test: [ "CMD", "pg_isready", "-d", "${POSTGRES_DB:-secret}", "-U", "${POSTGRES_USER:-secret}" ]
+            test: [ "CMD", "pg_isready", "-d", "${DATABASE_NAME:-app}", "-U", "${DATABASE_USERNAME:-app}" ]
             timeout: 5s
             retries: 5
             start_period: 60s
