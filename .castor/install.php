@@ -11,6 +11,11 @@ function database(): void
 {
     io()->title('Installation des packages base de données...');
     run('docker compose exec app composer require symfony/orm-pack');
+    io()->writeln('Démarrage du service database...');
+    run('docker compose --profile db up -d --wait database');
+    io()->writeln('Test de connexion à la base de données...');
+    run('docker compose exec app bin/console dbal:run-sql "SELECT 1"');
+    io()->success('Connexion à la base de données établie.');
     io()->success('Packages base de données installés.');
 }
 
