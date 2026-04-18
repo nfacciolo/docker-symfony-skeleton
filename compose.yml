@@ -42,6 +42,7 @@ services:
             retries: 20
             start_period: 60s
         environment:
+            CREATE_DATABASE: ${CREATE_DATABASE:-false}
             # Run "composer require symfony/orm-pack" to install and configure Doctrine ORM
             DATABASE_URL: pgsql://${DATABASE_USERNAME}:${DATABASE_PASSWORD}@${PROJECT_NAME}_database:5432/${DATABASE_NAME}?serverVersion=16&charset=utf8
             APP_ENV: dev

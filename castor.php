@@ -12,20 +12,20 @@ import(__DIR__ . '/.castor');
 function up(): void
 {
     io()->writeln('Building images...');
-    run('docker compose build');
+    run('docker compose --env-file .env.castor build');
 
     io()->writeln('Starting containers...');
-    run('docker compose up');
+    run('docker compose --env-file .env.castor up');
 }
 
 #[AsTask]
 function build(): void
 {
-    run('docker compose build');
+    run('docker compose --env-file .env.castor build');
 }
 
 #[AsTask]
 function down(): void
 {
-    run('docker compose down');
+    run('docker compose --env-file .env.castor down');
 }

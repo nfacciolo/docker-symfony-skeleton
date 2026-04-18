@@ -8,14 +8,16 @@ use Castor\Context;
 
 use function Castor\context;
 use function configuration\ensureConfiguration;
+use function configuration\loadConfiguration;
 
 
 #[AsContext(default: true)]
 function getContext(): Context
 {
-    // Ensure configuration exists and load it
-    // If the config file doesn't exist, it will be created interactively
-    $config = ensureConfiguration();
+    $skipTasks = ['reinit'];
+    $config = array_intersect($skipTasks, $_SERVER['argv'] ?? [])
+        ? loadConfiguration()
+        : ensureConfiguration();
 
     return new Context(environment: [
         'PROJECT_NAME' => $config['PROJECT_NAME'] ?? '',

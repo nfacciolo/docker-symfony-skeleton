@@ -2,8 +2,6 @@
 ###< symfony/framework-bundle ###
 ###> symfony/framework-bundle ###
 .castor.stub.php
-.castor/configuration/config.php
-.env*
 .idea
 /.env.*.local
 /.env.local

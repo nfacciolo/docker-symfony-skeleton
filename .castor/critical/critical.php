@@ -2,11 +2,12 @@
 
 namespace critical;
 
-
 use Castor\Attribute\AsTask;
 use function Castor\io;
 use function Castor\run;
+use function configuration\clearConfiguration;
 use function configuration\ensureConfiguration;
+use function configuration\hasConfiguration;
 
 #[AsTask(name:'reinit', description: 'Reinitialize the Symfony template by removing project files')]
 function reinit(): void
@@ -26,8 +27,6 @@ function reinit(): void
         'composer.*',
         'compose.override.yaml',
         'symfony.lock',
-        '.castor/configuration/config.php',
-        '.castor/configuration/config_database.php',
     ];
 
     foreach ($itemsToRemove as $item) {
@@ -40,26 +39,19 @@ function reinit(): void
     io()->success('Template reinitialized successfully!');
 }
 
-
-
 #[AsTask(description: 'Configure or reconfigure the project settings')]
 function config(): void
 {
-    $configFile = __DIR__ . '/.castor/config.php';
-
-    // If config exists, ask for confirmation to reconfigure
-    if (file_exists($configFile)) {
+    if (hasConfiguration()) {
         if (!io()->confirm('La configuration existe déjà. Voulez-vous la reconfigurer ?', false)) {
             io()->info('Configuration annulée.');
             return;
         }
 
-        // Remove existing config
-        unlink($configFile);
+        clearConfiguration();
         io()->writeln('Configuration existante supprimée.');
         io()->newLine();
     }
 
-    // Create new configuration
     ensureConfiguration();
 }
