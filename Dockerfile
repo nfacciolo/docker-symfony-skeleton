@@ -19,6 +19,7 @@ RUN apk add --no-cache \
         file \
         gettext \
         patch \
+        su-exec \
         unzip \
     ;
 
@@ -38,51 +39,29 @@ RUN set -eux; \
     composer clear-cache
 ENV PATH="${PATH}:/root/.composer/vendor/bin"
 
+RUN addgroup -g 1000 symfony \
+    && adduser -u 1000 -G symfony -h /home/symfony -s /bin/sh -D symfony
+
 WORKDIR /srv/app
+RUN chown symfony:symfony /srv/app
 ENV PHP_DATE_TIMEZONE='Europe/Paris'
 
-# ─── Composer: install PHP deps (shared by node_builder and sylius_php_prod) ──
+# ─── Composer: install PHP deps ───────────────────────────────────────────────
 FROM base AS composer_prod
 
-COPY scripts scripts/
-COPY patches patches/
 COPY composer.* symfony.lock ./
-COPY bundle ./bundle
 RUN set -eux; \
     composer install --prefer-dist --no-autoloader --no-interaction --no-scripts --no-progress --no-dev; \
     composer clear-cache
 
-RUN patch -p1 -d vendor/sylius/resource-bundle \
-    < patches/sylius-resource-operation-defaults-preserve-class.patch
-
-# ─── Node: compile frontend assets ───────────────────────────────────────────
-FROM node:lts-alpine AS node_builder
-
-WORKDIR /srv/app
-
-COPY package.json tsconfig.json webpack.config.js ./
-COPY assets assets/
-COPY bundle bundle/
-COPY --from=composer_prod /srv/app/vendor vendor/
-
-RUN npm install && npm run build:prod
-
 # ─── Production ───────────────────────────────────────────────────────────────
-FROM base AS sylius_php_prod
+FROM base AS app_php_prod
 
-# copy file required by opcache preloading
-COPY config/preload.php /srv/app/config/preload.php
-
-# build for production
 ENV APP_ENV=prod
 
 COPY --from=composer_prod /srv/app/vendor vendor/
 COPY composer.* symfony.lock ./
-COPY bundle bundle/
-
-# copy only specifically what we need
-COPY .env .env.prod ./
-COPY assets assets/
+COPY .env ./
 COPY bin bin/
 COPY config config/
 COPY public public/
@@ -91,18 +70,15 @@ COPY templates templates/
 COPY translations translations/
 COPY migrations migrations/
 
-COPY --from=node_builder /srv/app/public/build public/build/
-
 RUN set -eux; \
     mkdir -p var/cache var/log; \
-    composer dump-autoload --classmap-authoritative; \
-    APP_SECRET='' composer run-script post-install-cmd; \
-    chmod +x bin/console; sync; \
-    bin/console sylius:install:assets --no-interaction; \
-    bin/console sylius:theme:assets:install public --no-interaction
+    composer dump-autoload --classmap-authoritative --no-dev; \
+    composer run-script --no-dev --no-interaction post-install-cmd; \
+    chmod +x bin/console; \
+    bin/console cache:warmup; \
+    sync
 
 VOLUME /srv/app/var
-VOLUME /srv/app/public/media
 
 COPY docker/php/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
 RUN chmod +x /usr/local/bin/docker-entrypoint
@@ -110,36 +86,10 @@ RUN chmod +x /usr/local/bin/docker-entrypoint
 ENTRYPOINT ["docker-entrypoint"]
 CMD ["php-fpm"]
 
-# ─── Development (independent from production) ────────────────────────────────
+# ─── Development ──────────────────────────────────────────────────────────────
 FROM base AS app_php_dev
 
 ENV APP_ENV=dev
-
-COPY scripts scripts/
-COPY patches patches/
-COPY .env .env.test .env.test_cached ./
-COPY composer.* symfony.lock ./
-COPY bundle ./bundle
-RUN set -eux; \
-    composer install --prefer-dist --no-autoloader --no-interaction --no-scripts --no-progress; \
-    composer clear-cache
-
-RUN patch -p1 -d vendor/sylius/resource-bundle \
-    < patches/sylius-resource-operation-defaults-preserve-class.patch
-
-COPY assets assets/
-COPY bin bin/
-COPY config config/
-COPY public public/
-COPY src src/
-COPY templates templates/
-COPY translations translations/
-COPY migrations migrations/
-
-RUN set -eux; \
-    mkdir -p var/cache var/log; \
-    chmod +x bin/console; \
-    sync
 
 COPY docker/php/dev/xdebug.ini $PHP_INI_DIR/conf.d/xdebug.ini
 
