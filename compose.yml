@@ -30,6 +30,7 @@ services:
             - ./:/srv/app/
 
         environment:
+            PROJECT_NAME: ${PROJECT_NAME}
             MAILER_DSN: smtp://mailhog:1025
             SYLIUS_DATABASE_URL: postgresql://${DATABASE_USERNAME:-app}:${DATABASE_PASSWORD:-secret}@database/${DATABASE_NAME:-app}?serverVersion=17&charset=utf8
             XDEBUG_MODE: 'debug'
