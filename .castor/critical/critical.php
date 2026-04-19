@@ -28,6 +28,8 @@ function reinit(): void
         'vendor',
         '.env*',
         'composer.*',
+        'node_modules',
+        'package-lock.json',
         'compose.override.yaml',
         'symfony.lock',
     ];
