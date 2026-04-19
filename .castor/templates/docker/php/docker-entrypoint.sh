@@ -8,31 +8,22 @@ fi
 
 if [ "$1" = 'php-fpm' ] || [ "$1" = 'bin/console' ]; then
 
-  if [ ! -f vendor/autoload.php ]; then
-    echo ""
-    echo "Aucune application Symfony détectée."
-    printf "Créer un nouveau projet Symfony ? [o/N] "
-    read -r answer
-    case "$answer" in
-      [oO]|[oO][uU][iI])
-        composer create-project symfony/skeleton:"8.0.x" ./tmp --prefer-dist --no-progress --no-interaction
-        cd tmp
-        rm -rf var
-        cp -R . ..
-        cd -
-        rm -Rf tmp/
+  if [ ! -f vendor/autoload.php ] && [ "${SYMFONY_INIT:-0}" = "1" ]; then
+    composer create-project symfony/skeleton:"8.0.x" ./tmp --prefer-dist --no-progress --no-interaction
+    cd tmp
+    rm -rf var
+    cp -R . ..
+    cd -
+    rm -Rf tmp/
 
-        if [ -f .gitignore.dist ]; then
-          cp .gitignore.dist .gitignore
-        fi
-        ;;
-      *)
-        echo "Installation annulée."
-        ;;
-    esac
+    if [ -f .gitignore.dist ]; then
+      cp .gitignore.dist .gitignore
+    fi
   fi
 
-	bin/console cache:clear
+  if [ -f vendor/autoload.php ]; then
+    bin/console cache:clear
+  fi
 fi
 
 exec docker-php-entrypoint "$@"

@@ -29,13 +29,20 @@ function composeArgs(): string
 #[AsTask]
 function up(): void
 {
+    $envPrefix = '';
+    if (!file_exists(getcwd() . '/vendor/autoload.php')) {
+        if (io()->confirm('Aucune application Symfony détectée. Créer un nouveau projet Symfony ?', true)) {
+            $envPrefix = 'SYMFONY_INIT=1 ';
+        }
+    }
+
     run('mkdir -p public/media');
 
     io()->writeln('Building images...');
-    run(sprintf('docker compose %s build', composeArgs()));
+    run(sprintf('%sdocker compose %s build', $envPrefix, composeArgs()));
 
     io()->writeln('Starting containers...');
-    run(sprintf('docker compose %s up', composeArgs()));
+    run(sprintf('%sdocker compose %s up', $envPrefix, composeArgs()));
 }
 
 #[AsTask]
