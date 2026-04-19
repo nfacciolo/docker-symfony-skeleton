@@ -122,6 +122,34 @@ function dev(): void
     io()->success('Outils de développement installés.');
 }
 
+#[AsTask(description: 'Install Symfony UX components (twig-component, live-component, icons)')]
+function components(): void
+{
+    io()->title('Installation des composants Symfony UX...');
+
+    $hasAssetMapper = file_exists(getcwd() . '/config/packages/asset_mapper.yaml');
+    $hasEncore      = file_exists(getcwd() . '/webpack.config.js');
+
+    if (!$hasAssetMapper && !$hasEncore) {
+        io()->warning('Aucun gestionnaire d\'assets détecté (Asset Mapper ou Webpack Encore).');
+        io()->writeln('Comparatif détaillé : <href=https://symfony.com/doc/current/frontend.html>https://symfony.com/doc/current/frontend.html</>');
+        io()->newLine();
+        $choice = io()->choice('Lequel souhaitez-vous installer ?', [
+            'asset-mapper' => 'Asset Mapper — moderne, sans Node requis',
+            'encore'       => 'Webpack Encore — webpack, Node fourni via Docker Compose',
+        ]);
+
+        if ($choice === 'asset-mapper') {
+            run('docker compose exec app composer require symfony/asset-mapper');
+        } else {
+            encore();
+        }
+    }
+
+    run('docker compose exec app composer require symfony/ux-twig-component symfony/ux-live-component symfony/ux-icons');
+    io()->success('Composants Symfony UX installés.');
+}
+
 #[AsTask(description: 'Install web stack (twig-pack, security-bundle, form, validator)')]
 function web(): void
 {
@@ -134,6 +162,14 @@ function web(): void
 function package(string $name): void
 {
     run(sprintf('docker compose exec app composer require %s', escapeshellarg($name)));
+}
+
+#[AsTask(name: 'components', namespace: 'remove', description: 'Remove Symfony UX components')]
+function removeComponents(): void
+{
+    io()->title('Suppression des composants Symfony UX...');
+    run('docker compose exec app composer remove symfony/ux-twig-component symfony/ux-live-component symfony/ux-icons');
+    io()->success('Composants Symfony UX supprimés.');
 }
 
 #[AsTask(name: 'package', namespace: 'remove', description: 'Remove a composer package')]
