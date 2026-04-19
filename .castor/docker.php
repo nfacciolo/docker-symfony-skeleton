@@ -8,7 +8,7 @@ use function Castor\io;
 #[AsTask(name: 'init', namespace: 'docker', description: 'Copy Docker skeleton files to the project root')]
 function init(): void
 {
-    $templatesDir = dirname(__DIR__) . '/templates';
+    $templatesDir = __DIR__ . '/templates';
     $projectDir   = getcwd();
 
     io()->title('Initialisation des fichiers Docker...');
