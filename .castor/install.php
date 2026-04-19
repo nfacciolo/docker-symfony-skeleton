@@ -127,6 +127,15 @@ function components(): void
 {
     io()->title('Installation des composants Symfony UX...');
 
+    if (!file_exists(getcwd() . '/config/packages/twig.yaml')) {
+        io()->warning('Le stack web n\'est pas installé (Twig requis pour les composants).');
+        if (!io()->confirm('Installer le stack web maintenant ?', true)) {
+            io()->info('Installation annulée.');
+            return;
+        }
+        web();
+    }
+
     $hasAssetMapper = file_exists(getcwd() . '/config/packages/asset_mapper.yaml');
     $hasEncore      = file_exists(getcwd() . '/webpack.config.js');
 
