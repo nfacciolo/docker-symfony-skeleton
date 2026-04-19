@@ -16,11 +16,6 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'bin/console' ]; then
     cd -
     rm -Rf tmp/
 
-    # Restore PROJECT_NAME overwritten by Symfony's .env
-    if [ -n "${PROJECT_NAME:-}" ] && ! grep -q "^PROJECT_NAME=" .env 2>/dev/null; then
-      printf "\nPROJECT_NAME=%s\n" "$PROJECT_NAME" >> .env
-    fi
-
     # Restore original .gitignore
     if [ -f .gitignore.dist ]; then
       cp .gitignore.dist .gitignore

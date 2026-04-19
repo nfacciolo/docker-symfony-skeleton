@@ -21,6 +21,7 @@ function getContext(): Context
 
     return new Context(environment: [
         'PROJECT_NAME' => $config['PROJECT_NAME'] ?? '',
+        'APP_PORT'     => $config['APP_PORT'] ?? '800',
     ]);
 }
 

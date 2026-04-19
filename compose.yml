@@ -31,7 +31,6 @@ services:
         volumes:
             - ./:/srv/app/
 #            - /srv/app/var
-
         environment:
             PROJECT_NAME: ${PROJECT_NAME}
             MAILER_DSN: smtp://mailhog:1025

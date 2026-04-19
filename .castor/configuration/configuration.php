@@ -8,7 +8,7 @@ const CONFIG_KEYS = ['PROJECT_NAME', 'APP_PORT'];
 
 function getEnvFilePath(): string
 {
-    return dirname(__DIR__, 2) . '/.env';
+    return dirname(__DIR__, 2) . '/.env.local';
 }
 
 function parseEnvFile(string $path): array
@@ -93,7 +93,8 @@ function ensureConfiguration(): array
     $envFile = getEnvFilePath();
     $current = parseEnvFile($envFile);
 
-    if (array_key_exists('PROJECT_NAME', $current)) {
+    $missingKeys = array_diff(CONFIG_KEYS, array_keys($current));
+    if (empty($missingKeys)) {
         return $current;
     }
 
@@ -101,10 +102,17 @@ function ensureConfiguration(): array
     io()->writeln('Des variables de configuration sont manquantes dans .env.');
     io()->newLine();
 
-    $newVars = [
-        'PROJECT_NAME' => io()->ask('Nom du projet', 'my-project'),
-        'APP_PORT'     => io()->ask('Port de l\'application', '800'),
+    $prompts = [
+        'PROJECT_NAME' => fn() => io()->ask('Nom du projet', 'my-project'),
+        'APP_PORT'     => fn() => io()->ask('Port de l\'application', '800'),
     ];
+
+    $newVars = [];
+    foreach ($missingKeys as $key) {
+        if (isset($prompts[$key])) {
+            $newVars[$key] = ($prompts[$key])();
+        }
+    }
 
     appendEnvVariables($envFile, $newVars);
     io()->newLine();
