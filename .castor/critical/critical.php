@@ -23,6 +23,7 @@ function reinit(): void
         'public',
         'tmp',
         'src',
+        'templates',
         'var',
         'vendor',
         '.env*',
