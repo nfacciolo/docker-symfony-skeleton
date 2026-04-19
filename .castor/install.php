@@ -102,6 +102,18 @@ function recommended(): void
     ]);
 }
 
+#[AsTask(description: 'Install Webpack Encore and run npm install')]
+function encore(): void
+{
+    io()->title('Installation de Webpack Encore...');
+    run('docker compose exec app composer require symfony/webpack-encore-bundle');
+    io()->writeln('Démarrage du service node...');
+    run('docker compose --profile node up -d node');
+    io()->writeln('Installation des dépendances npm...');
+    run('docker compose exec node npm install');
+    io()->success('Webpack Encore installé.');
+}
+
 #[AsTask(description: 'Install dev tools (maker-bundle, profiler-pack)')]
 function dev(): void
 {

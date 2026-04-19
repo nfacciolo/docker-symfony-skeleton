@@ -13,9 +13,17 @@ function hasDatabase(): bool
     return file_exists(__DIR__ . '/config/packages/doctrine.yaml');
 }
 
+function hasEncore(): bool
+{
+    return file_exists(__DIR__ . '/webpack.config.js');
+}
+
 function composeArgs(): string
 {
-    return hasDatabase() ? '--profile db' : '';
+    $profiles = [];
+    if (hasDatabase()) $profiles[] = '--profile db';
+    if (hasEncore())   $profiles[] = '--profile node';
+    return implode(' ', $profiles);
 }
 
 #[AsTask]
