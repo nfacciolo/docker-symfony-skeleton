@@ -107,6 +107,7 @@ function encore(): void
 {
     io()->title('Installation de Webpack Encore...');
     run('docker compose exec app composer require symfony/webpack-encore-bundle');
+    io()->note('La recette Flex indique de démarrer le serveur Node et de lancer npm install — c\'est exactement ce qu\'on fait pour vous dans la suite.');
     io()->writeln('Démarrage du service node...');
     run('docker compose --profile node up -d node');
     io()->writeln('Installation des dépendances npm...');
