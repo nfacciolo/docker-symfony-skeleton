@@ -27,7 +27,7 @@ function reinit(): void
         'var',
         'vendor',
         '.env*',
-        'composer.*',
+        'composer.lock',
         'node_modules',
         'package.json',
         'package-lock.json',
@@ -41,7 +41,7 @@ function reinit(): void
         run(sprintf('rm -rf %s', $item));
     }
 
-    run('cp .castor/critical/resources/.gitignore.original .gitignore');
+    run('git checkout -- composer.json castor.php .gitignore');
 
     io()->success('Template reinitialized successfully!');
 }
