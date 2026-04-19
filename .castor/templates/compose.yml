@@ -33,6 +33,7 @@ services:
 #            - /srv/app/var
         environment:
             PROJECT_NAME: ${PROJECT_NAME}
+            SYMFONY_INIT: ${SYMFONY_INIT:-0}
             MAILER_DSN: smtp://mailhog:1025
             DATABASE_URL: postgresql://${DATABASE_USERNAME:-app}:${DATABASE_PASSWORD:-secret}@database/${DATABASE_NAME:-app}?serverVersion=17&charset=utf8
             XDEBUG_MODE: 'debug'
