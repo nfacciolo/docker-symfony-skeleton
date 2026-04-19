@@ -1,0 +1,9 @@
+{
+    "name": "reactic/docker-symfony-skeleton",
+    "description": "Docker Symfony skeleton with Castor tasks for project management",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.2"
+    }
+}
