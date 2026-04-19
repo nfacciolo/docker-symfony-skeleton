@@ -53,7 +53,7 @@ services:
             - POSTGRES_PASSWORD=${DATABASE_PASSWORD:-secret}
             - POSTGRES_DB=${DATABASE_NAME:-app}
         volumes:
-            - pg_data:/bitnami/postgresql
+            - pg_data:/var/lib/postgresql/data
 
         healthcheck:
             test: [ "CMD", "pg_isready", "-d", "${DATABASE_NAME:-app}", "-U", "${DATABASE_USERNAME:-app}" ]
