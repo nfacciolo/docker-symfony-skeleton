@@ -4,7 +4,7 @@ namespace configuration;
 
 use function Castor\io;
 
-const CONFIG_KEYS = ['PROJECT_NAME'];
+const CONFIG_KEYS = ['PROJECT_NAME', 'APP_PORT'];
 
 function getEnvFilePath(): string
 {
@@ -103,6 +103,7 @@ function ensureConfiguration(): array
 
     $newVars = [
         'PROJECT_NAME' => io()->ask('Nom du projet', 'my-project'),
+        'APP_PORT'     => io()->ask('Port de l\'application', '800'),
     ];
 
     appendEnvVariables($envFile, $newVars);
