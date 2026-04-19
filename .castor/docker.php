@@ -29,15 +29,17 @@ function init(): void
             continue;
         }
 
-        if (file_exists($target)) {
-            if (!io()->confirm(sprintf('"%s" existe déjà. Écraser ?', $relativePath), false)) {
-                io()->writeln(sprintf('  <comment>↷</comment> %s ignoré', $relativePath));
+        $destination = preg_replace('/\.dist$/', '', $target);
+        $displayPath = preg_replace('/\.dist$/', '', $relativePath);
+
+        if (file_exists($destination)) {
+            if (!io()->confirm(sprintf('"%s" existe déjà. Écraser ?', $displayPath), false)) {
+                io()->writeln(sprintf('  <comment>↷</comment> %s ignoré', $displayPath));
                 continue;
             }
         }
-
-        copy($item->getPathname(), $target);
-        io()->writeln(sprintf('  <info>✓</info> %s', $relativePath));
+        copy($item->getPathname(), $destination);
+        io()->writeln(sprintf('  <info>✓</info> %s', $displayPath));
     }
 
     io()->success('Fichiers Docker initialisés à la racine du projet.');
