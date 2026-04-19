@@ -29,7 +29,9 @@ function reinit(): void
         '.env*',
         'composer.*',
         'node_modules',
+        'package.json',
         'package-lock.json',
+        'webpack.config.js',
         'compose.override.yaml',
         'symfony.lock',
     ];

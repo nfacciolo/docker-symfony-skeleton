@@ -71,12 +71,13 @@ services:
     node:
         profiles: ["node"]
         container_name: ${PROJECT_NAME}_node
+        user: node
         tty: true
         image: node:lts
         working_dir: /usr/src/app/
         volumes:
             - ./:/usr/src/app
-            - ./docker/node/.npmrc:/root/.npmrc
+            - ./docker/node/.npmrc:/home/node/.npmrc
 
         command: sh
 
