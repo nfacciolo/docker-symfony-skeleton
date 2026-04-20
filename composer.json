@@ -1,9 +1,21 @@
 {
     "name": "reactic/docker-symfony-skeleton",
     "description": "Docker Symfony skeleton with Castor tasks for project management",
-    "type": "library",
+    "type": "composer-plugin",
     "license": "MIT",
     "require": {
-        "php": ">=8.2"
+        "php": ">=8.2",
+        "composer-plugin-api": "^2.0"
+    },
+    "require-dev": {
+        "composer/composer": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Reactic\\DockerSymfonySkeleton\\": "src/"
+        }
+    },
+    "extra": {
+        "class": "Reactic\\DockerSymfonySkeleton\\Composer\\Plugin"
     }
 }

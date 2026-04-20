@@ -11,6 +11,11 @@ $castorPath = file_exists(__DIR__ . '/vendor/reactic/docker-symfony-skeleton/.ca
 import($castorPath);
 
 
+function hasSymfony(): bool
+{
+    return file_exists(__DIR__ . '/src/Kernel.php');
+}
+
 function hasDatabase(): bool
 {
     return file_exists(__DIR__ . '/config/packages/doctrine.yaml');
@@ -33,7 +38,7 @@ function composeArgs(): string
 function up(): void
 {
     $envPrefix = '';
-    if (!file_exists(getcwd() . '/vendor/autoload.php')) {
+    if (!hasSymfony()) {
         if (io()->confirm('Aucune application Symfony détectée. Créer un nouveau projet Symfony ?', true)) {
             $envPrefix = 'SYMFONY_INIT=1 ';
         }

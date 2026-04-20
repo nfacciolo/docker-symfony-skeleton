@@ -8,7 +8,7 @@ fi
 
 if [ "$1" = 'php-fpm' ] || [ "$1" = 'bin/console' ]; then
 
-  if [ ! -f vendor/autoload.php ] && [ "${SYMFONY_INIT:-0}" = "1" ]; then
+  if [ ! -f src/Kernel.php ] && [ "${SYMFONY_INIT:-0}" = "1" ]; then
     composer create-project symfony/skeleton:"8.0.x" ./tmp --prefer-dist --no-progress --no-interaction
     cd tmp
     rm -rf var

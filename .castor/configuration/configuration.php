@@ -8,7 +8,7 @@ const CONFIG_KEYS = ['PROJECT_NAME', 'APP_PORT'];
 
 function getEnvFilePath(): string
 {
-    return dirname(__DIR__, 2) . '/.env.local';
+    return getcwd() . '/.env.local';
 }
 
 function parseEnvFile(string $path): array
